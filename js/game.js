@@ -80,7 +80,7 @@ module.exports = Attacker = (function(superClass) {
 
 
 
-},{"../globals.coffee":10,"./Entity.coffee":3}],2:[function(require,module,exports){
+},{"../globals.coffee":11,"./Entity.coffee":3}],2:[function(require,module,exports){
 var Defender, Entity, GLOBALS,
   bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -221,11 +221,7 @@ module.exports = Defender = (function(superClass) {
   };
 
   Defender.prototype.canFireMahLazarz = function() {
-    if (this.timeSinceLazar >= this.lazarCooldown) {
-      return true;
-    } else {
-      return false;
-    }
+    return this.timeSinceLazar >= this.lazarCooldown;
   };
 
   Defender.prototype.setInnerCircle = function(radius) {
@@ -238,15 +234,15 @@ module.exports = Defender = (function(superClass) {
     });
   };
 
-  Defender.prototype.raiseHealth = function() {
-    this.maxHealth += 2;
+  Defender.prototype.raiseHealth = function(x) {
+    this.maxHealth += x;
     return $(window).trigger(GLOBALS.MAX_HEALTH_GAIN);
   };
 
   Defender.prototype.onScore = function(entity) {
     this.score += entity.scoreValue;
     if (this.score % 10 === 0) {
-      return this.raiseHealth();
+      return this.raiseHealth(2);
     }
   };
 
@@ -262,7 +258,7 @@ module.exports = Defender = (function(superClass) {
 
 
 
-},{"../globals.coffee":10,"./Entity.coffee":3}],3:[function(require,module,exports){
+},{"../globals.coffee":11,"./Entity.coffee":3}],3:[function(require,module,exports){
 var Entity, GLOBALS,
   bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
@@ -338,7 +334,7 @@ module.exports = Entity = (function() {
 
 
 
-},{"../globals.coffee":10}],4:[function(require,module,exports){
+},{"../globals.coffee":11}],4:[function(require,module,exports){
 var Entity, GLOBALS, Laser,
   bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -395,7 +391,7 @@ module.exports = Laser;
 
 
 
-},{"../globals.coffee":10,"./Entity.coffee":3}],5:[function(require,module,exports){
+},{"../globals.coffee":11,"./Entity.coffee":3}],5:[function(require,module,exports){
 var GLOBALS, HealthUp, Powerup,
   bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -436,7 +432,7 @@ module.exports = HealthUp;
 
 
 
-},{"../../globals.coffee":10,"./Powerup.coffee":8}],6:[function(require,module,exports){
+},{"../../globals.coffee":11,"./Powerup.coffee":8}],6:[function(require,module,exports){
 var GLOBALS, HealthUpDouble, Powerup,
   bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -485,7 +481,7 @@ module.exports = HealthUpDouble;
 
 
 
-},{"../../globals.coffee":10,"./Powerup.coffee":8}],7:[function(require,module,exports){
+},{"../../globals.coffee":11,"./Powerup.coffee":8}],7:[function(require,module,exports){
 var GLOBALS, InvulnerableUp, Powerup,
   bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -526,7 +522,7 @@ module.exports = InvulnerableUp;
 
 
 
-},{"../../globals.coffee":10,"./Powerup.coffee":8}],8:[function(require,module,exports){
+},{"../../globals.coffee":11,"./Powerup.coffee":8}],8:[function(require,module,exports){
 var Entity, GLOBALS, Powerup,
   bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -573,7 +569,45 @@ module.exports = Powerup = (function(superClass) {
 
 
 
-},{"../../globals.coffee":10,"../Entity.coffee":3}],9:[function(require,module,exports){
+},{"../../globals.coffee":11,"../Entity.coffee":3}],9:[function(require,module,exports){
+var GLOBALS, Powerup, ShootEmUp,
+  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
+
+Powerup = require('./Powerup.coffee');
+
+GLOBALS = require('../../globals.coffee');
+
+module.exports = ShootEmUp = (function(superClass) {
+  extend(ShootEmUp, superClass);
+
+  function ShootEmUp(x, y) {
+    this.onCollect = bind(this.onCollect, this);
+    this.makeBody = bind(this.makeBody, this);
+    ShootEmUp.__super__.constructor.call(this, x, y);
+    this.trigger = 'shoot-em-up';
+    this.args = {};
+    this.probability = GLOBALS.POWERUP.SHOOTEMUP.PROBABILITY;
+  }
+
+  ShootEmUp.prototype.makeBody = function() {
+    return this.body = new Path.Circle({
+      center: [this.pos.x, this.pos.y],
+      radius: this.size,
+      fillColor: GLOBALS.POWERUP.SHOOTEMUP.COLOR_1
+    });
+  };
+
+  ShootEmUp.prototype.onCollect = function() {};
+
+  return ShootEmUp;
+
+})(Powerup);
+
+
+
+},{"../../globals.coffee":11,"./Powerup.coffee":8}],10:[function(require,module,exports){
 var GameLevel, game;
 
 GameLevel = require('./levels/GameLevel.coffee');
@@ -582,7 +616,7 @@ game = new GameLevel();
 
 
 
-},{"./levels/GameLevel.coffee":11}],10:[function(require,module,exports){
+},{"./levels/GameLevel.coffee":12}],11:[function(require,module,exports){
 module.exports = {
   ATTACKER_DEATH: 'attacker-death',
   MAX_HEALTH_GAIN: 'maxHealth-gain',
@@ -596,7 +630,7 @@ module.exports = {
     MAX_VELOCITY: 3,
     COLOR_1: '#00b3ff',
     COLOR_2: '#23e96b',
-    LAZAR_COOLDOWN: 100
+    LAZAR_COOLDOWN: 200
   },
   ATTACKER: {
     COLOR_1: '#f24e3f',
@@ -612,6 +646,10 @@ module.exports = {
     },
     HEALTHUPDOUBLE: {
       PROBABILITY: 700
+    },
+    SHOOTEMUP: {
+      PROBABILITY: 10000,
+      COLOR_1: '#23e96b'
     }
   },
   DEFENDER_SIZE: $(window).width() / 50,
@@ -622,8 +660,8 @@ module.exports = {
 
 
 
-},{}],11:[function(require,module,exports){
-var Attacker, Defender, GLOBALS, GameLevel, HealthUp, HealthUpDouble, InvulnerableUp, Laser, Level,
+},{}],12:[function(require,module,exports){
+var Attacker, Defender, GLOBALS, GameLevel, HealthUp, HealthUpDouble, InvulnerableUp, Laser, Level, ShootEmUp,
   bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -644,6 +682,8 @@ HealthUpDouble = require('../entities/powerups/HealthUpDouble.coffee');
 
 InvulnerableUp = require('../entities/powerups/InvulnerableUp.coffee');
 
+ShootEmUp = require('../entities/powerups/ShootEmUp.coffee');
+
 Level = require('./Level.coffee');
 
 GLOBALS = require('../globals.coffee');
@@ -654,6 +694,7 @@ module.exports = GameLevel = (function(superClass) {
   function GameLevel() {
     this.keepInBounds = bind(this.keepInBounds, this);
     this.checkCollisions = bind(this.checkCollisions, this);
+    this.onShootEmUp = bind(this.onShootEmUp, this);
     this.fireMahLazarz = bind(this.fireMahLazarz, this);
     this.spawnAttacker = bind(this.spawnAttacker, this);
     this.animateScoreBar = bind(this.animateScoreBar, this);
@@ -689,6 +730,10 @@ module.exports = GameLevel = (function(superClass) {
       invulnerableUp: {
         object: InvulnerableUp,
         probability: GLOBALS.POWERUP.INVULNERABLEUP.PROBABILITY
+      },
+      shootEmUp: {
+        object: ShootEmUp,
+        probability: GLOBALS.POWERUP.SHOOTEMUP.PROBABILITY
       }
     };
     setTimeout((function(_this) {
@@ -718,6 +763,7 @@ module.exports = GameLevel = (function(superClass) {
     var i, j, ref, results;
     this.defender = new Defender(view.center.x, view.center.y);
     this.entities.push(this.defender);
+    this.entities.push(new ShootEmUp(100, 100));
     results = [];
     for (i = j = 0, ref = this.ATTACKER_AMOUNT; j <= ref; i = j += 1) {
       this.numAttackers++;
@@ -733,9 +779,14 @@ module.exports = GameLevel = (function(superClass) {
         return _this.animateScoreBar();
       };
     })(this));
-    return $(window).on(GLOBALS.MAX_HEALTH_GAIN, (function(_this) {
+    $(window).on(GLOBALS.MAX_HEALTH_GAIN, (function(_this) {
       return function() {
         return _this.animateHealthBar();
+      };
+    })(this));
+    return $(window).on('shoot-em-up', (function(_this) {
+      return function(event, args) {
+        return _this.onShootEmUp();
       };
     })(this));
   };
@@ -860,6 +911,23 @@ module.exports = GameLevel = (function(superClass) {
     return results;
   };
 
+  GameLevel.prototype.onShootEmUp = function() {
+    return setTimeout((function(_this) {
+      return function() {
+        var i, j, results;
+        results = [];
+        for (i = j = 0; j <= 180; i = j += 5) {
+          results.push(setTimeout(function() {
+            _this.fireMahLazarz();
+            _this.defender.rotate();
+            return _this.defender.v = new Point(0, 0);
+          }, i * 25));
+        }
+        return results;
+      };
+    })(this), 100);
+  };
+
   GameLevel.prototype.checkCollisions = function(index) {
     var e, j, ref, ref1, type1, type2;
     if (index == null) {
@@ -949,7 +1017,7 @@ module.exports = GameLevel = (function(superClass) {
 
 
 
-},{"../entities/Attacker.coffee":1,"../entities/Defender.coffee":2,"../entities/Laser.coffee":4,"../entities/powerups/HealthUp.coffee":5,"../entities/powerups/HealthUpDouble.coffee":6,"../entities/powerups/InvulnerableUp.coffee":7,"../globals.coffee":10,"./Level.coffee":12}],12:[function(require,module,exports){
+},{"../entities/Attacker.coffee":1,"../entities/Defender.coffee":2,"../entities/Laser.coffee":4,"../entities/powerups/HealthUp.coffee":5,"../entities/powerups/HealthUpDouble.coffee":6,"../entities/powerups/InvulnerableUp.coffee":7,"../entities/powerups/ShootEmUp.coffee":9,"../globals.coffee":11,"./Level.coffee":13}],13:[function(require,module,exports){
 var GLOBALS, Level,
   bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
@@ -1024,4 +1092,4 @@ module.exports = Level = (function() {
 
 
 
-},{"../globals.coffee":10}]},{},[9]);
+},{"../globals.coffee":11}]},{},[10]);

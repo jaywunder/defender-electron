@@ -13,7 +13,7 @@ module.exports =
     MAX_VELOCITY: 3
     COLOR_1: '#00b3ff'
     COLOR_2: '#23e96b'
-    LAZAR_COOLDOWN: 100
+    LAZAR_COOLDOWN: 200
 
   ATTACKER:
     COLOR_1: '#f24e3f'
@@ -29,6 +29,10 @@ module.exports =
 
     HEALTHUPDOUBLE:
       PROBABILITY: 700
+
+    SHOOTEMUP:
+      PROBABILITY: 10000
+      COLOR_1: '#23e96b'
 
   DEFENDER_SIZE: $(window).width() / 50
   ATTACKER_SIZE: $(window).width() / 50

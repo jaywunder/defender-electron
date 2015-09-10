@@ -8,6 +8,7 @@ Laser = require '../entities/Laser.coffee'
 HealthUp = require '../entities/powerups/HealthUp.coffee'
 HealthUpDouble = require '../entities/powerups/HealthUpDouble.coffee'
 InvulnerableUp = require '../entities/powerups/InvulnerableUp.coffee'
+ShootEmUp = require '../entities/powerups/ShootEmUp.coffee'
 Level = require './Level.coffee'
 GLOBALS = require '../globals.coffee'
 
@@ -36,6 +37,9 @@ module.exports = class GameLevel extends Level
       invulnerableUp:
         object: InvulnerableUp,
         probability: GLOBALS.POWERUP.INVULNERABLEUP.PROBABILITY
+      shootEmUp:
+        object: ShootEmUp
+        probability: GLOBALS.POWERUP.SHOOTEMUP.PROBABILITY
 
     # UNCOMMENT WHEN DONE TESTING
     # setTimeout () =>
@@ -70,7 +74,7 @@ module.exports = class GameLevel extends Level
     @defender = new Defender view.center.x, view.center.y
     @entities.push @defender
 
-    # @entities.push new InvulnerableUp(100, 100)
+    @entities.push new ShootEmUp(100, 100)
 
     for i in [0..@ATTACKER_AMOUNT] by 1
       @numAttackers++
@@ -88,6 +92,9 @@ module.exports = class GameLevel extends Level
 
     $(window).on GLOBALS.MAX_HEALTH_GAIN, =>
       @animateHealthBar()
+
+    $(window).on 'shoot-em-up', (event, args) =>
+      @onShootEmUp()
 
   makeStars: () ->
     starLayer = new Layer
@@ -183,6 +190,16 @@ module.exports = class GameLevel extends Level
     for i in [0...4] by 1
       # spawn four new lasers
       @entities.push new Laser(i, @defender)
+
+  onShootEmUp: () =>
+    setTimeout =>
+      for i in [0..180] by 5
+        setTimeout =>
+          @fireMahLazarz()
+          @defender.rotate()
+          @defender.v = new Point 0, 0
+        , i * 25
+    , 100
 
   checkCollisions: (index) =>
     index ?= 0

@@ -104,10 +104,7 @@ module.exports = class Defender extends Entity
       @timeSinceLazar = 0
 
   canFireMahLazarz: ()=>
-    if @timeSinceLazar >= @lazarCooldown
-      return true
-    else
-      return false
+    return @timeSinceLazar >= @lazarCooldown
 
   setInnerCircle: (radius) =>
     @innerCircle.remove()

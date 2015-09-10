@@ -1,0 +1,31 @@
+{
+  "name": "defender",
+  "version": "0.1.0",
+  "description": "Defender with the ElectronJS",
+  "main": "main.js",
+  "scripts": {
+    "test": "electron .",
+    "start": "electron .",
+    "watch-game": "watchify -t coffeeify coffee/game.coffee -o js/game.js -v",
+    "watch-start": "watchify -t coffeeify coffee/start.coffee -o js/start.js -v",
+    "watch": "watchify -t coffeeify -v",
+    "build": "browserify -t coffeeify coffee/main.coffee -o js/game.js coffee/start.coffee -0 js/start.js -v"
+  },
+  "repository": {
+    "type": "git",
+    "url": "null"
+  },
+  "keywords": [
+    "defender",
+    "awesome"
+  ],
+  "author": "Jacob Wunder",
+  "license": "MIT",
+  "dependencies": {
+    "grunt": "^0.4.5",
+    "grunt-babel": "^5.0.0"
+  },
+  "devDependencies": {
+    "grunt-electron": "^1.0.0"
+  }
+}
